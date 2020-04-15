@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         congregation.cpp \
         database.cpp \
+        elder.cpp \
         main.cpp \
         mainwindow.cpp \
         sqlite/sqlite3.c \
@@ -35,6 +36,7 @@ SOURCES += \
 HEADERS += \
         congregation.h \
         database.h \
+        elder.h \
         mainwindow.h \
         sqlite/sqlite3.h \
         talk.h
