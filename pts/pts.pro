@@ -28,12 +28,14 @@ SOURCES += \
         database.cpp \
         main.cpp \
         mainwindow.cpp \
-        sqlite/sqlite3.c
+        sqlite/sqlite3.c \
+        talk.cpp
 
 HEADERS += \
         database.h \
         mainwindow.h \
-        sqlite/sqlite3.h
+        sqlite/sqlite3.h \
+        talk.h
 
 LIBS += -ldl
 LIBS += -lsqlite3
