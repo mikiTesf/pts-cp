@@ -10,18 +10,16 @@ namespace dbInit {
 class PTSDbInitializer {
 private:
     QString DB_NAME;
-    const QSqlDatabase DATABASE;
+    QSqlDatabase DATABASE;
 
-    bool initDB();
     void createNecessaryTables();
 public:
 
     PTSDbInitializer(QString DB_NAME) {
         this->DB_NAME = DB_NAME;
-        initDB ();
-        createNecessaryTables();
     }
 
+    bool initDB();
     void closeConnection();
 };
 

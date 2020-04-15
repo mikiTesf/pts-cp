@@ -9,7 +9,8 @@ int main(int argc, char *argv[])
 //    w.show();
     const QString DB_NAME = "data.db3";
     dbInit::PTSDbInitializer ptsDbInitializer(DB_NAME);
-
+    ptsDbInitializer.initDB();
+    ptsDbInitializer.closeConnection();
 
 //    return a.exec();
     return 0;
