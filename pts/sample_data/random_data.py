@@ -8,7 +8,7 @@ word_list = []
 
 ############## ID and talk_title csv ###############
 word_file = open('text/words.txt')
-csv_file  = open('random_titles.csv', 'w')
+csv_file  = open('random_talks.csv', 'w')
 
 for word in word_file:
     word_list.append(word)
@@ -63,3 +63,36 @@ for i in range(1, 31):
                     + phoneNumber + ',' + talk_id + ',' + congregation_id + ',' + enabled + '\n')
 
 print('elder_csv successfuly created...')
+
+# insert into the database
+import csv, sqlite3
+
+con = sqlite3.connect("../../build-pts-Desktop_Qt_5_13_0_GCC_64bit-Debug/data.db3")
+cur = con.cursor()
+
+# clear existing data
+cur.execute("DELETE FROM talk;")
+cur.execute("DELETE FROM Congregation;")
+cur.execute("DELETE FROM elder;")
+
+# insert new data
+with open('random_talks.csv','r') as csv_file:
+    dr = csv.DictReader(csv_file)
+    tuples = [(pair['id'], pair['talkNumber'], pair['title']) for pair in dr]
+    cur.executemany("INSERT INTO talk (id, talkNumber, title) VALUES (?, ?, ?);", tuples)
+print("talk table populated...")
+
+with open('random_congs.csv','r') as csv_file:
+    dr = csv.DictReader(csv_file)
+    tuples = [(pair['id'], pair['name']) for pair in dr]
+    cur.executemany("INSERT INTO congregation (id, name) VALUES (?, ?);", tuples)
+print("congregation table populated...")
+
+with open('random_elders.csv','r') as csv_file:
+    dr = csv.DictReader(csv_file)
+    tuples = [(pair['id'], pair['firstName'], pair['middleName'], pair['lastName'], pair['phoneNumber'], pair['talk_id'], pair['congregation_id'], pair['enabled']) for pair in dr]
+    cur.executemany("INSERT INTO elder (id, firstName, middleName, lastName, phoneNumber, talk_id, congregation_id, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", tuples)
+print("elder table populated")
+
+con.commit()
+con.close()
