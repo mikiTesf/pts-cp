@@ -51,3 +51,12 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    sample data/randomCSV.py \
+    sample data/random_congs.csv \
+    sample data/random_elders.csv \
+    sample data/random_titles.csv \
+    sample data/text/congs.txt \
+    sample data/text/names.txt \
+    sample data/text/words.txt
