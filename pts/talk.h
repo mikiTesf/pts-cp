@@ -14,25 +14,12 @@ public:
     talk(std::string title, int talkNumber);
     talk(int id, int talkNumber, std::string talkTitle);
 
-    int getId() {
-        return this->id;
-    }
+    int getId();
+    int getTalkNumber();
 
-    int getTalkNumber() {
-        return this->talkNumber;
-    }
-
-    void setTalkNumber(int talkNumber) {
-        this->talkNumber = talkNumber;
-    }
-
-    std::string getTalkTitle() {
-        return this->title;
-    }
-
-    void setTalkTitle(std::string title) {
-        this->title = title;
-    }
+    void setTalkNumber(int talkNumber);
+    std::string getTalkTitle();
+    void setTalkTitle(std::string title);
 };
 
 #endif // TALK_H
