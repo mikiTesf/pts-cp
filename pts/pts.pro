@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        congregation.cpp \
         database.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
         talk.cpp
 
 HEADERS += \
+        congregation.h \
         database.h \
         mainwindow.h \
         sqlite/sqlite3.h \
