@@ -15,12 +15,12 @@ private:
     void createNecessaryTables();
 public:
 
-    PTSDbInitializer(QString DB_NAME) {
-        this->DB_NAME = DB_NAME;
-    }
+    PTSDbInitializer(QString DB_NAME);
 
     bool initDB();
     void closeConnection();
+
+    QSqlDatabase getDatabase();
 };
 
 

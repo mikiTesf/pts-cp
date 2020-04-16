@@ -13,8 +13,8 @@ private:
     std::string middleName;
     std::string lastName;
     std::string phoneNumber;
-    talk talk;
-    congregation congregation;
+    class talk talk;
+    class congregation congregation;
     bool enabled;
 public:
     elder();
