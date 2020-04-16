@@ -6,6 +6,8 @@
 
 namespace dbInit {
 
+QSqlDatabase PTSDbInitializer::DATABASE;
+
 PTSDbInitializer::PTSDbInitializer(QString DB_NAME) {
     this->DB_NAME = DB_NAME;
 }
@@ -15,10 +17,10 @@ bool PTSDbInitializer::initDB() {
 
     if (QSqlDatabase::isDriverAvailable(SQLITE_DRIVER)) {
         std::cout << "found the proper SQLite driver" << std:: endl;
-        this->DATABASE = QSqlDatabase::addDatabase(SQLITE_DRIVER);
-        this->DATABASE.setDatabaseName(this->DB_NAME);
+        PTSDbInitializer::DATABASE = QSqlDatabase::addDatabase(SQLITE_DRIVER);
+        PTSDbInitializer::DATABASE.setDatabaseName(this->DB_NAME);
 
-        if (this->DATABASE.open ()) {
+        if (PTSDbInitializer::DATABASE.open()) {
             std::cout << "successfully connected to the database" << std::endl;
         }
 
@@ -26,13 +28,13 @@ bool PTSDbInitializer::initDB() {
 
         return true;
     } else {
-        qWarning() << "ERROR: " << this->DATABASE.lastError();
+        qWarning() << "ERROR: " << PTSDbInitializer::DATABASE.lastError();
         return false;
     }
 }
 
 void PTSDbInitializer::createNecessaryTables() {
-    QSqlQuery query(this->DATABASE);
+    QSqlQuery query(PTSDbInitializer::DATABASE);
     QString queryString;
     // create the congregation table
     queryString = "CREATE TABLE IF NOT EXISTS `congregation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `name` VARCHAR );";
@@ -50,15 +52,15 @@ void PTSDbInitializer::createNecessaryTables() {
     queryString = "CREATE TABLE IF NOT EXISTS `talk` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `talkNumber` INTEGER NOT NULL , `title` VARCHAR );";
     query.exec(queryString);
 
-    this->DATABASE.commit();
+    PTSDbInitializer::DATABASE.commit();
 }
 
 QSqlDatabase PTSDbInitializer::getDatabase() {
-    return this->DATABASE;
+    return PTSDbInitializer::DATABASE;
 }
 
 void PTSDbInitializer::closeConnection() {
-    this->DATABASE.close ();
+    PTSDbInitializer::DATABASE.close ();
 }
 
 }

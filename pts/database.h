@@ -10,7 +10,7 @@ namespace dbInit {
 class PTSDbInitializer {
 private:
     QString DB_NAME;
-    QSqlDatabase DATABASE;
+    static QSqlDatabase DATABASE;
 
     void createNecessaryTables();
 public:
@@ -22,7 +22,6 @@ public:
 
     QSqlDatabase getDatabase();
 };
-
 
 }
 
