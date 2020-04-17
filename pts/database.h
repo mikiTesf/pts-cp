@@ -1,26 +1,27 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <QString>
-#include <QSql>
-#include <QSqlDatabase>
+#include "sqlite/sqlite3.h"
 
-namespace dbInit {
+#include <string>
 
-class PTSDbInitializer {
+namespace ptsDbHandle {
+
+using std::string;
+
+class PTSDbHandle {
 private:
-    QString DB_NAME;
-    static QSqlDatabase DATABASE;
+    std::string DB_NAME;
+    static sqlite3* DATABASE;
 
     void createNecessaryTables();
 public:
 
-    PTSDbInitializer(QString DB_NAME);
+    PTSDbHandle(std::string DB_NAME);
 
     bool initDB();
-    void closeConnection();
 
-    QSqlDatabase getDatabase();
+    static sqlite3* getDatabase();
 };
 
 }

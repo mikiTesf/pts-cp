@@ -1,66 +1,38 @@
+#include "congregation.h"
+#include "talk.h"
+#include "elder.h"
 #include "database.h"
 
-#include <QtSql>
-#include <QString>
 #include <iostream>
 
-namespace dbInit {
+namespace ptsDbHandle {
 
-QSqlDatabase PTSDbInitializer::DATABASE;
+sqlite3* PTSDbHandle::DATABASE;
 
-PTSDbInitializer::PTSDbInitializer(QString DB_NAME) {
+PTSDbHandle::PTSDbHandle(std::string DB_NAME) {
     this->DB_NAME = DB_NAME;
 }
 
-bool PTSDbInitializer::initDB() {
-    const QString SQLITE_DRIVER("QSQLITE");
+bool PTSDbHandle::initDB() {
+    int status = sqlite3_open(this->DB_NAME.c_str(), &PTSDbHandle::DATABASE);
 
-    if (QSqlDatabase::isDriverAvailable(SQLITE_DRIVER)) {
-        std::cout << "found the proper SQLite driver" << std:: endl;
-        PTSDbInitializer::DATABASE = QSqlDatabase::addDatabase(SQLITE_DRIVER);
-        PTSDbInitializer::DATABASE.setDatabaseName(this->DB_NAME);
-
-        if (PTSDbInitializer::DATABASE.open()) {
-            std::cout << "successfully connected to the database" << std::endl;
-        }
-
-        PTSDbInitializer::createNecessaryTables();
-
-        return true;
+    if (status) {
+        std::cout << "could not open " << this->DB_NAME << ": " << sqlite3_errmsg(PTSDbHandle::DATABASE) << "\n";
     } else {
-        qWarning() << "ERROR: " << PTSDbInitializer::DATABASE.lastError();
-        return false;
+        std::cout << this->DB_NAME << " ready for further operations\n" << std::endl;
+        // sqlite_orm performs automatic open/close operations on the database. Hence, to avoid
+        // accidental modifications of the database in between the time of initialization and the
+        // following database operation, the database will be closed
+        sqlite3_close(PTSDbHandle::DATABASE);
     }
+
+    createNecessaryTables();
+
+    return true;
 }
 
-void PTSDbInitializer::createNecessaryTables() {
-    QSqlQuery query(PTSDbInitializer::DATABASE);
-    QString queryString;
-    // create the congregation table
-    queryString = "CREATE TABLE IF NOT EXISTS `congregation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `name` VARCHAR );";
-    query.exec(queryString);
-    // create the elder table
-    queryString = "CREATE TABLE IF NOT EXISTS `elder` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `firstName` VARCHAR NOT NULL ,";
-    queryString.append ("`middleName` VARCHAR NOT NULL , `lastName` VARCHAR , `phoneNumber` VARCHAR NOT NULL ,");
-    queryString.append ("`talk_id` INTEGER NOT NULL , `congregation_id` INTEGER NOT NULL , `enabled` BOOLEAN DEFAULT 1 NOT NULL );");
-    query.exec(queryString);
-    // create the program table
-    queryString = "CREATE TABLE IF NOT EXISTS `program` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `date` VARCHAR NOT NULL";
-    queryString.append (" , `congregation_id` INTEGER NOT NULL , `elder_id` INTEGER , `isFree` BOOLEAN );");
-    query.exec(queryString);
-    // create the talk table
-    queryString = "CREATE TABLE IF NOT EXISTS `talk` (`id` INTEGER PRIMARY KEY AUTOINCREMENT , `talkNumber` INTEGER NOT NULL , `title` VARCHAR );";
-    query.exec(queryString);
+void PTSDbHandle::createNecessaryTables() {
 
-    PTSDbInitializer::DATABASE.commit();
-}
-
-QSqlDatabase PTSDbInitializer::getDatabase() {
-    return PTSDbInitializer::DATABASE;
-}
-
-void PTSDbInitializer::closeConnection() {
-    PTSDbInitializer::DATABASE.close ();
 }
 
 }
