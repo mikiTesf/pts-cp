@@ -32,7 +32,6 @@ static auto initDB(string path){
                                        make_column("talk_number", &Talk::setTalkNumber, &Talk::getTalkNumber),
                                        make_column("title", &Talk::setTalkTitle, &Talk::getTalkTitle))
                             );
-
     }
 
 using Storage = decltype(initDB(""));
