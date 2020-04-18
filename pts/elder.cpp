@@ -1,81 +1,107 @@
 #include "elder.h"
 
-elder::elder() { };
+namespace pts {
 
-elder::elder(
+Elder::Elder() { };
+
+Elder::Elder(
     std::string firstName,
     std::string middleName,
     std::string lastName,
     std::string phoneNumber,
-    class talk talk,
-    class congregation congregation,
+    int talk_id,
+    int congregation_id,
     bool enabled)
 {
     this->firstName = firstName;
     this->middleName = middleName;
     this->lastName = lastName;
     this->phoneNumber = phoneNumber;
-    this->talk = talk;
-    this->congregation = congregation;
+    this->talk_id = talk_id;
+    this->congregation_id = congregation_id;
     this->enabled = enabled;
 }
 
-void elder::setFirstName(std::string firstName){
+Elder::Elder(
+    std::string firstName,
+    std::string middleName,
+    std::string lastName,
+    std::string phoneNumber,
+    Talk talk,
+    Congregation congregation,
+    bool enabled)
+{
+    this->firstName = firstName;
+    this->middleName = middleName;
+    this->lastName = lastName;
+    this->phoneNumber = phoneNumber;
+    this->talk_id = talk.getId();
+    this->congregation_id = congregation.getId();
+    this->enabled = enabled;
+}
+
+void Elder::setId(int id){
+    this->id = id;
+}
+
+void Elder::setFirstName(std::string firstName){
     this->firstName = firstName;
 }
 
-void elder::setMiddleName(std::string middleName){
+void Elder::setMiddleName(std::string middleName){
     this->middleName = middleName;
 }
 
-void elder::setLastName(std::string lastName){
+void Elder::setLastName(std::string lastName){
     this->lastName = lastName;
 }
 
-void elder::setPhoneNumber(std::string phoneNumber){
+void Elder::setPhoneNumber(std::string phoneNumber){
     this->phoneNumber = phoneNumber;
 }
 
-void elder::setTalk(class talk talk){
-    this->talk = talk;
+void Elder::setTalkId(int talk_id){
+    this->talk_id = talk_id;
 }
 
-void elder::setCongregation(class congregation congregation){
-    this->congregation = congregation;
+void Elder::setCongregationId(int congregation_id){
+    this->congregation_id = congregation_id;
 }
 
-void elder::setEnabled(bool enabled){
+void Elder::setEnabled(bool enabled){
     this->enabled = enabled;
 }
 
-int elder::getId(){
+int Elder::getId() const {
     return this->id;
 }
 
-std::string elder::getFirstName(){
+std::string Elder::getFirstName() const {
     return this->firstName;
 }
 
-std::string elder::getMiddleName(){
+std::string Elder::getMiddleName() const {
     return this->middleName;
 }
 
-std::string elder::getLastName(){
+std::string Elder::getLastName() const {
     return this->lastName;
 }
 
-std::string elder::getPhoneNumber(){
+std::string Elder::getPhoneNumber() const {
     return this->phoneNumber;
 }
 
-class talk elder::getTalk(){
-    return this->talk;
+int Elder::getTalkId() const {
+    return this->talk_id;
 }
 
-class congregation elder::getCongregation(){
-    return this->congregation;
+int Elder::getCongregationId() const {
+    return this->congregation_id;
 }
 
-bool elder::getEnabled(){
+bool Elder::getEnabled() const {
     return this->enabled;
 }
+
+} // end of namespace pts

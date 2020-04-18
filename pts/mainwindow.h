@@ -16,6 +16,21 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_addCongragationButton_clicked();
+
+    void on_congregationNameTextField_returnPressed();
+
+    void on_addTalkButton_clicked();
+
+    void refreshAndShowEldersList();
+
+    void refreshAndShowTalksList();
+
+    void refreshAndShowCongregationsList();
+
+    void on_tabWidget_tabBarClicked(int index);
+
 private:
     Ui::MainWindow *ui;
 };

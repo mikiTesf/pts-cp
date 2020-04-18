@@ -1,17 +1,18 @@
+#include "constants.h"
 #include "mainwindow.h"
 #include <QApplication>
 #include "database.h"
 
+using namespace pts;
+
 int main(int argc, char *argv[])
 {
-//    QApplication a(argc, argv);
-//    MainWindow w;
-//    w.show();
-    const QString DB_NAME = "data.db3";
-    dbInit::PTSDbInitializer ptsDbInitializer(DB_NAME);
-    ptsDbInitializer.initDB();
-    ptsDbInitializer.closeConnection();
+    // initialize database
+    PTSDatabase::init();
 
-//    return a.exec();
-    return 0;
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
+    //return 0;
 }
