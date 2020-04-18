@@ -1,35 +1,44 @@
 #include "talk.h"
 #include <string>
 
-talk::talk() { }
+namespace pts {
 
-talk::talk(std::string title, int talkNumber) {
+Talk::Talk() { }
+
+Talk::Talk(std::string title, int talkNumber) {
     this->title = title;
     this->talkNumber = talkNumber;
 }
 
-talk::talk(int id, int talkNumber, std::string title) {
+Talk::Talk(int id, int talkNumber, std::string title) {
     this->id = id;
     this->talkNumber = talkNumber;
     this->title = title;
 }
 
-int talk::getId() {
+int Talk::getId() const {
     return this->id;
 }
 
-int talk::getTalkNumber() {
+int Talk::getTalkNumber() const {
     return this->talkNumber;
 }
 
-void talk::setTalkNumber(int talkNumber) {
-    this->talkNumber = talkNumber;
-}
-
-std::string talk::getTalkTitle() {
+std::string Talk::getTalkTitle() const {
     return this->title;
 }
 
-void talk::setTalkTitle(std::string title) {
+void Talk::setId(int id) {
+    this->id = id;
+}
+
+void Talk::setTalkNumber(int talkNumber) {
+    this->talkNumber = talkNumber;
+}
+
+
+void Talk::setTalkTitle(std::string title) {
     this->title = title;
 }
+
+} // end of namespace pts

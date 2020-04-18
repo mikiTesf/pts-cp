@@ -1,24 +1,32 @@
 #include "congregation.h"
 
-congregation::congregation() { };
+namespace pts {
 
-congregation::congregation(std::string name) {
+Congregation::Congregation() { };
+
+Congregation::Congregation(std::string name) {
     this->name = name;
 };
 
-congregation::congregation(int id, std::string name) {
+Congregation::Congregation(int id, std::string name) {
     this->id = id;
     this->name = name;
 };
 
-int congregation::getId() {
+int Congregation::getId() const {
     return this->id;
 }
 
-std::string congregation::getName() {
+std::string Congregation::getName() const {
     return this->name;
 }
 
-void congregation::setName(std::string name) {
+void Congregation::setId(int id) {
+    this->id = id;
+}
+
+void Congregation::setName(std::string name) {
     this->name = name;
 }
+
+} // end of namespace pts

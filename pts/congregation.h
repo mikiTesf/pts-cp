@@ -1,22 +1,28 @@
-#ifndef CONGREGATION_H
-#define CONGREGATION_H
+
 
 #include <string>
 
-class congregation
+namespace pts {
+
+#ifndef CONGREGATION_H
+#define CONGREGATION_H
+
+class Congregation
 {
 private:
     int id;
     std::string name;
 public:
-    congregation();
-    congregation(std::string name);
-    congregation(int id, std::string name);
+    Congregation();
+    Congregation(std::string name);
+    Congregation(int id, std::string name);
 
+    void setId(int id);
     void setName(std::string name);
 
-    int getId();
-    std::string getName();
+    int getId() const;
+    std::string getName() const;
 };
 
 #endif // CONGREGATION_H
+} // end of namespace pts

@@ -1,28 +1,9 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-
-#include <QString>
-#include <QSql>
-#include <QSqlDatabase>
-
-namespace dbInit {
-
-class PTSDbInitializer {
-private:
-    QString DB_NAME;
-    static QSqlDatabase DATABASE;
-
-    void createNecessaryTables();
-public:
-
-    PTSDbInitializer(QString DB_NAME);
-
-    bool initDB();
-    void closeConnection();
-
-    QSqlDatabase getDatabase();
-};
-
-}
-
+#include "sqlite_orm/sqlite_orm.h"
+#include <string>
+#include "elder.h"
+#include "talk.h"
+#include "congregation.h"
+#include "database.cpp"
 #endif // DATABASE_H
