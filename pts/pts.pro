@@ -26,7 +26,6 @@ CONFIG += c++14
 
 SOURCES += \
         congregation.cpp \
-        database.cpp \
         elder.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -35,6 +34,7 @@ SOURCES += \
 
 HEADERS += \
         congregation.h \
+        constants.h \
         database \
         database.h \
         elder.h \
