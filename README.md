@@ -1,2 +1,2 @@
 # pts-cp
-PTS in C++
+[PTS](https://github.com/mikiTesf/publicTalkScheduler) in C++
