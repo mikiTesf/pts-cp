@@ -33,6 +33,7 @@
 
 # other
 build-pts-Desktop_Qt_5_13_0_GCC_64bit-Debug/
-pts/pts.pro.user
+build-pts-Desktop-Debug/
+pts/pts.pro.user*
 *.csv
 Sources/*

@@ -35,11 +35,11 @@ SOURCES += \
 HEADERS += \
         congregation.h \
         constants.h \
-        database \
         database.h \
         elder.h \
         mainwindow.h \
         sqlite/sqlite3.h \
+        sqlite_orm/sqlite_orm.h \
         talk.h
 
 LIBS += -ldl
