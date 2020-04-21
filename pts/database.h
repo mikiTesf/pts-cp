@@ -1,11 +1,13 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 #include "constants.h"
-#include "sqlite_orm/sqlite_orm.h"
-#include <string>
 #include "elder.h"
 #include "talk.h"
 #include "congregation.h"
+
+#include "sqlite_orm/sqlite_orm.h"
+
+#include <string>
 
 namespace pts {
 
@@ -69,6 +71,18 @@ public: static Talk save (Talk talk){
 public: static auto getAllElders(){
 
         return storage.get_all<Elder>();
+    }
+
+public: static auto getTalk(int id) {
+        return storage.get<Talk>(id);
+    }
+
+public: static auto getCongregation(int id) {
+        return storage.get<Congregation>(id);
+    }
+
+public: static auto getElder(int id) {
+        return storage.get<Elder>(id);
     }
 
 public: static auto getAllCongregations(){
