@@ -29,6 +29,10 @@ private slots:
 
     void refreshAndShowCongregationsList();
 
+    void refreshCongregationsComboBox();
+
+    void refreshTalksComboBox();
+
     void on_tabWidget_tabBarClicked(int index);
 
 private:
