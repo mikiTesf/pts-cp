@@ -13,7 +13,7 @@ csv_file  = open('random_talks.csv', 'w')
 for word in word_file:
     word_list.append(word)
 
-csv_file.write('id,' + 'talkNumber,' + 'title' + '\n')
+csv_file.write('id,' + 'talk_number,' + 'title' + '\n')
 for i in range(1, 40):
     first_word  = random.choice(word_list).rstrip('\n')
     middle_word = random.choice(word_list).rstrip('\n')
@@ -44,7 +44,7 @@ word_list.clear()
 for word in word_file:
     word_list.append(word)
 
-csv_file.write('id,' + 'firstName,' + 'middleName,' + 'lastName,' + 'phoneNumber,'\
+csv_file.write('id,' + 'first_name,' + 'middle_name,' + 'last_name,' + 'phone_number,'\
                 + 'talk_id,' + 'congregation_id,' + 'enabled' + '\n')
 for i in range(1, 31):
     _id             = str(i)
@@ -67,7 +67,7 @@ print('elder_csv successfuly created...')
 # insert into the database
 import csv, sqlite3
 
-con = sqlite3.connect("../../build-pts-Desktop_Qt_5_13_0_GCC_64bit-Debug/data.db3")
+con = sqlite3.connect("../../build-pts-Desktop-Debug/pts.bin")
 cur = con.cursor()
 
 # clear existing data
@@ -78,8 +78,8 @@ cur.execute("DELETE FROM elder;")
 # insert new data
 with open('random_talks.csv','r') as csv_file:
     dr = csv.DictReader(csv_file)
-    tuples = [(pair['id'], pair['talkNumber'], pair['title']) for pair in dr]
-    cur.executemany("INSERT INTO talk (id, talkNumber, title) VALUES (?, ?, ?);", tuples)
+    tuples = [(pair['id'], pair['talk_number'], pair['title']) for pair in dr]
+    cur.executemany("INSERT INTO talk (id, talk_number, title) VALUES (?, ?, ?);", tuples)
 print("talk table populated...")
 
 with open('random_congs.csv','r') as csv_file:
@@ -90,8 +90,8 @@ print("congregation table populated...")
 
 with open('random_elders.csv','r') as csv_file:
     dr = csv.DictReader(csv_file)
-    tuples = [(pair['id'], pair['firstName'], pair['middleName'], pair['lastName'], pair['phoneNumber'], pair['talk_id'], pair['congregation_id'], pair['enabled']) for pair in dr]
-    cur.executemany("INSERT INTO elder (id, firstName, middleName, lastName, phoneNumber, talk_id, congregation_id, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", tuples)
+    tuples = [(pair['id'], pair['first_name'], pair['middle_name'], pair['last_name'], pair['phone_number'], pair['talk_id'], pair['congregation_id'], pair['enabled']) for pair in dr]
+    cur.executemany("INSERT INTO elder (id, first_name, middle_name, last_name, phone_number, talk_id, congregation_id, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", tuples)
 print("elder table populated")
 
 con.commit()
