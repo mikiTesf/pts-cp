@@ -14,7 +14,7 @@ for word in word_file:
     word_list.append(word)
 
 csv_file.write('id,' + 'talk_number,' + 'title' + '\n')
-for i in range(1, 40):
+for i in range(1, 50):
     first_word  = random.choice(word_list).rstrip('\n')
     middle_word = random.choice(word_list).rstrip('\n')
     last_word   = random.choice(word_list).rstrip('\n')
@@ -39,6 +39,7 @@ print('cong_csv successfuly created...')
 #id firstName    middleName    lastName    phoneNumber    talk_id    congregation_id
 word_file = open('text/names.txt')
 csv_file  = open('random_elders.csv', 'w')
+elder_talk_map = {}
 
 word_list.clear()
 for word in word_file:
@@ -46,8 +47,14 @@ for word in word_file:
 
 csv_file.write('id,' + 'first_name,' + 'middle_name,' + 'last_name,' + 'phone_number,'\
                 + 'talk_id,' + 'congregation_id,' + 'enabled' + '\n')
-for i in range(1, 31):
+for i in range(1, 40):
     _id             = str(i)
+    talk_id         = str(random.randint(1, 40))
+
+    while talk_id in elder_talk_map.values():
+        talk_id = str(random.randint(1, 40))
+
+    elder_talk_map[_id] = talk_id
     first_name      = random.choice(word_list).rstrip('\n')
     middle_name     = random.choice(word_list).rstrip('\n')
     last_name       = random.choice(word_list).rstrip('\n')
@@ -56,11 +63,10 @@ for i in range(1, 31):
                       + str(random.randint(0, 9)) + str(random.randint(0, 9)) \
                       + str(random.randint(0, 9)) + str(random.randint(0, 9)) \
                       + str(random.randint(0, 9)) + str(random.randint(0, 9))
-    talk_id         = str(random.randint(1, 20))
     congregation_id = str(random.randint(1, 20))
-    enabled         = 'true'
+    enabled         = 1
     csv_file.write(_id + ',' + first_name + ',' + middle_name + ',' + last_name + ','
-                    + phoneNumber + ',' + talk_id + ',' + congregation_id + ',' + enabled + '\n')
+                    + phoneNumber + ',' + talk_id + ',' + congregation_id + ',' + str(enabled) + '\n')
 
 print('elder_csv successfuly created...')
 
