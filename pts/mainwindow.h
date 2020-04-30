@@ -29,8 +29,14 @@ private slots:
 
     void refreshAndShowCongregationsList();
 
+    void refreshCongregationsComboBox();
+
+    void refreshTalksComboBox();
+
     void on_tabWidget_tabBarClicked(int index);
 
+    void on_deleteCongregationButton_clicked();
+    
 private:
     Ui::MainWindow *ui;
 };

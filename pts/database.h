@@ -1,11 +1,13 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 #include "constants.h"
-#include "sqlite_orm/sqlite_orm.h"
-#include <string>
 #include "elder.h"
 #include "talk.h"
 #include "congregation.h"
+
+#include "sqlite_orm/sqlite_orm.h"
+
+#include <string>
 
 namespace pts {
 
