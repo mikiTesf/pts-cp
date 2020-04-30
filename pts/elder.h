@@ -1,4 +1,3 @@
-
 #include "talk.h"
 #include "congregation.h"
 #include <string>

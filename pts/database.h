@@ -73,18 +73,6 @@ public: static auto getAllElders(){
         return storage.get_all<Elder>();
     }
 
-public: static auto getTalk(int id) {
-        return storage.get<Talk>(id);
-    }
-
-public: static auto getCongregation(int id) {
-        return storage.get<Congregation>(id);
-    }
-
-public: static auto getElder(int id) {
-        return storage.get<Elder>(id);
-    }
-
 public: static auto getAllCongregations(){
 
         return storage.get_all<Congregation>();
