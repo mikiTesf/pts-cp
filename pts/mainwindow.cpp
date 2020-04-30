@@ -1,9 +1,18 @@
 #include "database.h"
+#include "elder.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-using  pts::PTSDatabase;
+#include <QMessageBox>
+
+using pts::PTSDatabase;
+using pts::Congregation;
+using pts::Elder;
+using pts::Talk;
+
+using sqlite_orm::where;
+using sqlite_orm::c;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->talkTable->setColumnWidth(0, this->width() / 4);
     ui->talkTable->horizontalHeader()->setStretchLastSection(true);
     ui->elderTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->congregationTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->talkTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->elderTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 MainWindow::~MainWindow()
@@ -31,7 +44,7 @@ void MainWindow::on_addCongragationButton_clicked()
 {
     //TODO add validation here
     QString congregationName = this->ui->congregationNameTextField->text();
-    pts::Congregation congregation = pts::Congregation(congregationName.toUtf8().toStdString());
+    Congregation congregation = Congregation(congregationName.toUtf8().toStdString());
     PTSDatabase::save(congregation);
     this->ui->congregationNameTextField->clear();
     refreshAndShowTalksList();
@@ -113,27 +126,27 @@ void MainWindow::refreshAndShowEldersList()
     auto allElders = PTSDatabase::getAllElders();
     elderTable->clear();
     elderTable->setRowCount(allElders.size());
-    elderTable->setColumnCount(7);
-    // first_name, middle_name, last_name, phone_number, talk_id, congregation_id, enabled
+    elderTable->setColumnCount(8);
     elderTable->verticalHeader()->setVisible(false);
 
     QStringList headers;
-    headers << "First Name" << "Middle Name" << "Last Name" << "Phone Number" << "Talk Number" << "Congregation" << "Enabled";
+    headers << "#" << "First Name" << "Middle Name" << "Last Name" << "Phone Number" << "Talk Number" << "Congregation" << "Enabled";
 
     elderTable->setHorizontalHeaderLabels(headers);
 
     int row = 0;
     std::string str;
     for(auto &elder: allElders) {
-        elderTable->setItem(row, 0,  new QTableWidgetItem(QString::fromStdString(elder.getFirstName())));
-        elderTable->setItem(row, 1,  new QTableWidgetItem(QString::fromStdString(elder.getMiddleName())));
-        elderTable->setItem(row, 2,  new QTableWidgetItem(QString::fromStdString(elder.getLastName())));
-        elderTable->setItem(row, 3,  new QTableWidgetItem(QString::fromStdString(elder.getPhoneNumber())));
+        elderTable->setItem(row, 0,  new QTableWidgetItem(QString::number(elder.getId())));
+        elderTable->setItem(row, 1,  new QTableWidgetItem(QString::fromStdString(elder.getFirstName())));
+        elderTable->setItem(row, 2,  new QTableWidgetItem(QString::fromStdString(elder.getMiddleName())));
+        elderTable->setItem(row, 3,  new QTableWidgetItem(QString::fromStdString(elder.getLastName())));
+        elderTable->setItem(row, 4,  new QTableWidgetItem(QString::fromStdString(elder.getPhoneNumber())));
 
-        str = std::to_string(PTSDatabase::getTalk(elder.getTalkId()).getTalkNumber());
-        elderTable->setItem(row, 4,  new QTableWidgetItem(QString::fromStdString(str)));
-        str = PTSDatabase::getCongregation (elder.getCongregationId()).getName();
+        str = std::to_string(PTSDatabase::getStorage().get<Talk>(elder.getTalkId()).getTalkNumber());
         elderTable->setItem(row, 5,  new QTableWidgetItem(QString::fromStdString(str)));
+        str = PTSDatabase::getStorage().get<Congregation>(elder.getCongregationId()).getName();
+        elderTable->setItem(row, 6,  new QTableWidgetItem(QString::fromStdString(str)));
 
         QTableWidgetItem *checkBoxItem = new QTableWidgetItem();
         if (elder.getEnabled()) {
@@ -141,7 +154,7 @@ void MainWindow::refreshAndShowEldersList()
         } else {
             checkBoxItem->setCheckState(Qt::Unchecked);
         }
-        elderTable->setItem(row, 6, checkBoxItem);
+        elderTable->setItem(row, 7, checkBoxItem);
         row++;
     }
 }
@@ -189,5 +202,41 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
             refreshAndShowEldersList();
             break;
     }
+}
 
+void MainWindow::on_deleteCongregationButton_clicked()
+{
+    int selectedRow = ui->congregationTable->selectedItems().first()->row();
+    std::string congregationName = this->ui->congregationTable->item(selectedRow, 1)->text().toStdString();
+
+    auto congregations = PTSDatabase::getStorage().get_all<Congregation>(where(c(&Congregation::getName) = congregationName));
+
+    if (congregations.size() == 0) return;
+
+    int congregationID = congregations[0].getId();
+    auto eldersInCongregation = PTSDatabase::getStorage()
+            .get_all<Elder>(where(c(&Elder::getCongregationId) = congregationID));
+
+    std::string messageBoxContent = "Delete " + congregations[0].getName() + "? ";
+
+    if (eldersInCongregation.size() != 0) {
+        messageBoxContent += "The following Elder(s) will also be deleted:\n";
+        for (Elder &elder : eldersInCongregation) {
+            messageBoxContent += "    • " + elder.getFirstName() + " " + elder.getMiddleName() + " " + elder.getLastName() + "\n";
+        }
+    }
+
+    auto choice = QMessageBox::question(this, "Are you sure?", QString::fromUtf8(messageBoxContent.c_str()));
+
+    if (choice == QMessageBox::Yes) {
+        PTSDatabase::getStorage().remove<Congregation>(congregationID);
+
+        for (Elder &elder : eldersInCongregation) {
+            PTSDatabase::getStorage().remove<Elder>(elder.getId());
+        }
+
+        refreshAndShowCongregationsList();
+        messageBoxContent = "\"" + congregationName + "\" and member elders deleted.";
+        QMessageBox::information(this, "Success!", QString::fromUtf8(messageBoxContent.c_str()));
+    }
 }
