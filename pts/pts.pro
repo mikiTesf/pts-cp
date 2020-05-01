@@ -29,6 +29,7 @@ SOURCES += \
         elder.cpp \
         main.cpp \
         mainwindow.cpp \
+        program.cpp \
         sqlite/sqlite3.c \
         talk.cpp
 
@@ -38,6 +39,7 @@ HEADERS += \
         database.h \
         elder.h \
         mainwindow.h \
+        program.h \
         sqlite/sqlite3.h \
         sqlite_orm/sqlite_orm.h \
         talk.h
