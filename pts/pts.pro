@@ -30,6 +30,7 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         program.cpp \
+        excel_generator.cpp \
         sqlite/sqlite3.c \
         talk.cpp
 
@@ -40,12 +41,12 @@ HEADERS += \
         elder.h \
         mainwindow.h \
         program.h \
+        excel_generator.h \
         sqlite/sqlite3.h \
         sqlite_orm/sqlite_orm.h \
         talk.h
 
-LIBS += -ldl
-LIBS += -lsqlite3
+LIBS += -ldl -lsqlite3 -lxlsxwriter
 
 FORMS += \
         mainwindow.ui
