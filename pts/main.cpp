@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 //    return a.exec();
 //    //return 0;
 
-    lxw_workbook* workbook = workbook_new("PTS.xlsx");
     pts::ExcelGenerator excelGenerator;
+    lxw_workbook* workbook = excelGenerator.getWorkbook();
 
     for (auto congregation : pts::PTSDatabase::getAllCongregations()) {
         lxw_worksheet* worksheet = workbook_add_worksheet(workbook, congregation.getName().c_str());

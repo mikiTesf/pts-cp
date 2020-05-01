@@ -10,6 +10,10 @@ ExcelGenerator::ExcelGenerator() {
     this->lastRow = 0;
 };
 
+lxw_workbook* ExcelGenerator::getWorkbook() {
+    return this->workbook;
+}
+
 void ExcelGenerator::insertCongregationName(lxw_worksheet* sheet, std::string congName) {
     lxw_format* bold = workbook_add_format(this->workbook);
     format_set_bold(bold);
@@ -20,6 +24,7 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
     int row = 1, col = 0;
     lxw_format* bold = workbook_add_format(this->workbook);
     format_set_bold(bold);
+
     worksheet_write_string(sheet, row, col++, "ሳምንት", bold);
     worksheet_write_string(sheet, row, col++, "ቀን", bold);
     worksheet_write_string(sheet, row, col++, "ተናጋሪ", bold);
@@ -30,7 +35,7 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
 
     for (pts::Elder elder : elders) {
         fullName = elder.getFirstName() + " " + elder.getMiddleName();
-        worksheet_write_string(sheet, row, col++, fullName.c_str(), NULL);
+        worksheet_write_string(sheet, row, col++, fullName.c_str(), bold);
     }
 
     worksheet_merge_range(sheet, 0, 5, 0, col - 1, "ከጉባኤ የሚሄዱ", bold);

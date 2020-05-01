@@ -17,6 +17,8 @@ private:
 public:
     ExcelGenerator();
 
+    lxw_workbook* getWorkbook();
+
     void insertCongregationName(lxw_worksheet*, std::string);
 
     void insertColumnsAndElderNames(lxw_worksheet*, std::vector<pts::Elder>);
