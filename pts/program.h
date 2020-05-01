@@ -16,16 +16,16 @@ private:
 public:
     Program();
 
-    void setID(int);
+    void setId(int);
     void setDate(time_t);
-    void setCongregationID(int);
-    void setElderID(int);
+    void setCongregationId(int);
+    void setElderId(int);
     void setFree(bool);
 
-    int getID();
+    int getId();
     time_t getDate();
-    int getCongregationID();
-    int getElderID();
+    int getCongregationId();
+    int getElderId();
     bool getFree();
 };
 
