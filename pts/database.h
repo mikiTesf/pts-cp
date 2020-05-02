@@ -15,7 +15,7 @@ namespace pts {
 
 using std::string;
 
-static auto initDB(string path){
+static auto initDB(string path) {
 
         using namespace sqlite_orm;
         return make_storage(path,
@@ -51,9 +51,6 @@ class PTSDatabase {
 
 public: static void init() {
         storage.sync_schema();
-    }
-public: static bool save () {
-        return  true;
     }
 
 public: static Storage getStorage () {
