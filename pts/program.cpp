@@ -8,7 +8,7 @@ void Program::setId(int id) {
     this->id = id;
 }
 
-void Program::setDate(time_t date) {
+void Program::setDate(std::string date) {
     this->date = date;
 }
 
@@ -24,23 +24,23 @@ void Program::setFree(bool free) {
     this->is_free = free;
 }
 
-int Program::getId() {
+int Program::getId() const {
     return this->id;
 }
 
-time_t Program::getDate() {
+std::string Program::getDate() const {
     return this->date;
 }
 
-int Program::getCongregationId() {
+int Program::getCongregationId() const {
     return this->congregation_id;
 }
 
-int Program::getElderId() {
+int Program::getElderId() const {
     return this->elder_id;
 }
 
-bool Program::getFree() {
+bool Program::getFree() const {
     return this->is_free;
 }
 
