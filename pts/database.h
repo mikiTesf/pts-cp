@@ -14,6 +14,7 @@
 namespace pts {
 
 using std::string;
+using sqlite_orm::distinct;
 
 static auto initDB(string path) {
 
@@ -91,6 +92,10 @@ public: static auto getAllTalks() {
 public: static auto getAllPrograms() {
 
         return storage.get_all<Program>();
+    }
+
+public: static auto getDistinctProgramDates() {
+        return storage.select(distinct(&Program::getDate));
     }
 };
 

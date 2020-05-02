@@ -2,6 +2,7 @@
 #include "elder.h"
 
 #include <xlsxwriter.h>
+#include <ctime>
 
 namespace pts {
 
@@ -41,13 +42,40 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
     worksheet_merge_range(sheet, 0, 5, 0, col - 1, "ከጉባኤ የሚሄዱ", bold);
 }
 
+void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<std::string> dates) {
+    int row = 2, weekNumber = 1;
+    tm tm1;
+    sscanf(dates[0].c_str(),"%4d-%2d-%2d", &tm1.tm_year, &tm1.tm_mon, &tm1.tm_mday);
+    int previousDateMonth = tm1.tm_mon;
+
+    for (std::string date : dates) {
+        sscanf(date.c_str(),"%4d-%2d-%2d", &tm1.tm_year, &tm1.tm_mon, &tm1.tm_mday);
+
+        if (tm1.tm_mon != previousDateMonth) {
+            weekNumber = 1;
+        }
+
+        worksheet_write_number(sheet, row, 0, weekNumber, NULL);
+        worksheet_write_string(sheet, row, 1, date.c_str(), NULL);
+
+        previousDateMonth = tm1.tm_mon;
+        ++row; ++weekNumber;
+    }
+
+    this->lastRow = row;
+}
+
+void ExcelGenerator::insertSpeakerDetails(lxw_worksheet* sheet) {
+
+}
+
 void ExcelGenerator::insertTalkRow(lxw_worksheet* sheet) {
     // Set this->lastRow to help the `insertInstructionMessage(...)` function indetermining where to
     // put the message. Doing this is neccessary as the span of the schedule is not always the same
 }
 
 void ExcelGenerator::insertInstructionMessage(lxw_worksheet* sheet) {
-    int row = this->lastRow + 1;
+    int row = this->lastRow;
     lxw_format* bold = workbook_add_format(this->workbook);
     format_set_bold(bold);
 

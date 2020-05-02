@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
         excelGenerator.insertCongregationName(worksheet, congregation.getName().c_str());
         std::cout << "inserting columns and elders names..." << std::endl;
         excelGenerator.insertColumnsAndElderNames(worksheet, elders);
+        std::cout << "Inserting week numbers and dates" << std::endl;
+        excelGenerator.insertWeekNumberAndDates(worksheet, pts::PTSDatabase::getDistinctProgramDates());
         std::cout << "inserting instruction messages..." << std::endl;
         excelGenerator.insertInstructionMessage(worksheet);
     }

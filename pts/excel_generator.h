@@ -23,6 +23,10 @@ public:
 
     void insertColumnsAndElderNames(lxw_worksheet*, std::vector<pts::Elder>);
 
+    void insertWeekNumberAndDates(lxw_worksheet*, std::vector<std::string>);
+
+    void insertSpeakerDetails(lxw_worksheet*);
+
     void insertTalkRow(lxw_worksheet*);
 
     void insertInstructionMessage(lxw_worksheet*);
