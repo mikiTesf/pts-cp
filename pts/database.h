@@ -57,24 +57,20 @@ public: static Storage getStorage () {
         return storage;
     }
 
-public: static Congregation save (Congregation congregation) {
+public: static void save (Congregation &congregation) {
         congregation.setId(storage.insert(congregation));
-        return congregation;
     }
 
-public: static Elder save (Elder elder) {
+public: static void save (Elder &elder) {
         elder.setId(storage.insert(elder));
-        return elder;
     }
 
-public: static Talk save (Talk talk) {
+public: static void save (Talk &talk) {
         talk.setId(storage.insert(talk));
-        return talk;
     }
 
-public: static Program save (Program program) {
+public: static void save (Program &program) {
         program.setId(storage.insert(program));
-        return program;
     }
 
 public: static auto getAllElders() {
