@@ -86,6 +86,22 @@ public: static auto getAllElders() {
         return storage.get_all<Elder>();
     }
 
+public: static auto getAllEnabledEldersOfCongregation(int congregationId) {
+        // replace with a single query that fetches for all elders of the congregation with the given
+        // id `congregationId` and that are also `enabled`
+        std::vector<pts::Elder> eldersInCongregation = storage.get_all<Elder>
+                (where(c(&Elder::getCongregationId) = congregationId));
+        std::vector<pts::Elder> enabledElders;
+
+        for (Elder elder : eldersInCongregation) {
+            if (elder.getEnabled()) {
+                enabledElders.push_back(elder);
+            }
+        }
+
+        return enabledElders;
+    }
+
 public: static auto getAllCongregations() {
 
         return storage.get_all<Congregation>();
@@ -108,6 +124,10 @@ public: static auto getDistinctProgramDates() {
 public: static auto getTalksForCongregation(int congregationId) {
         return storage.get_all<Program>(where(c(&Program::getCongregationId) = congregationId),
                                         order_by(&Program::getDate));
+    }
+
+public: static auto getTalksByElder(int elderId) {
+        return storage.get_all<Program>(where(c(&Program::getElderId) = elderId));
     }
 };
 

@@ -1,4 +1,5 @@
 #include "excel_generator.h"
+#include "congregation.h"
 #include "elder.h"
 #include "program.h"
 #include "database.h"
@@ -11,6 +12,12 @@ namespace pts {
 ExcelGenerator::ExcelGenerator() {
     this->workbook = workbook_new("PTS.xlsx");
     this->lastRow = 0;
+
+    int row = FIRST_SCHEDULE_ROW;
+    for (std::string date : pts::PTSDatabase::getDistinctProgramDates()) {
+        this->dateRowMap[date] = row;
+        ++row;
+    }
 };
 
 lxw_workbook* ExcelGenerator::getWorkbook() {
@@ -38,14 +45,16 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
 
     for (pts::Elder elder : elders) {
         fullName = elder.getFirstName() + " " + elder.getMiddleName();
-        worksheet_write_string(sheet, row, col++, fullName.c_str(), bold);
+        worksheet_write_string(sheet, row, col, fullName.c_str(), bold);
+        this->elderColumnMap[elder.getId()] = col;
+        ++col;
     }
 
     worksheet_merge_range(sheet, 0, 5, 0, col - 1, "ከጉባኤ የሚሄዱ", bold);
 }
 
 void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<std::string> dates) {
-    int row = 2, weekNumber = 1;
+    int row = FIRST_SCHEDULE_ROW, weekNumber = 1;
     tm tm1;
     sscanf(dates[0].c_str(),"%4d-%2d-%2d", &tm1.tm_year, &tm1.tm_mon, &tm1.tm_mday);
     int previousDateMonth = tm1.tm_mon;
@@ -68,7 +77,7 @@ void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<
 }
 
 void ExcelGenerator::insertSpeakersDetails(lxw_worksheet* sheet, std::vector<Program> programsForCongregation) {
-    int row = 2, col = 2;
+    int row = FIRST_SCHEDULE_ROW, col = 2;
 
     for (Program program : programsForCongregation) {
         if (!program.getFree()) {
@@ -81,6 +90,22 @@ void ExcelGenerator::insertSpeakersDetails(lxw_worksheet* sheet, std::vector<Pro
             worksheet_write_string(sheet, row, col + 2, elder.getPhoneNumber().c_str(), NULL);
         }
         ++row;
+    }
+}
+
+void ExcelGenerator::insertCongregationsForElderGoingOut(lxw_worksheet* sheet, int congregationId) {
+    int row, col;
+    std::string congregationName;
+
+    for (Elder elder : pts::PTSDatabase::getAllEnabledEldersOfCongregation(congregationId)) {
+        std::vector<pts::Program> programs = pts::PTSDatabase::getTalksByElder(elder.getId());
+        col = this->elderColumnMap.at(elder.getId());
+
+        for (Program program : programs) {
+            row = this->dateRowMap.at(program.getDate());
+            congregationName = pts::PTSDatabase::getStorage().get<pts::Congregation>(program.getCongregationId()).getName();
+            worksheet_write_string(sheet, row, col, congregationName.c_str(), NULL);
+        }
     }
 }
 

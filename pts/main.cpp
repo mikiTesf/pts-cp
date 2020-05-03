@@ -41,8 +41,11 @@ int main(int argc, char *argv[])
         excelGenerator.insertWeekNumberAndDates(worksheet, pts::PTSDatabase::getDistinctProgramDates());
         std::cout << "inserting speaker details..." << std::endl;
         excelGenerator.insertSpeakersDetails(worksheet, pts::PTSDatabase::getTalksForCongregation(congregation.getId()));
+        std::cout << "inserting congregation names for elders leaving...(" << congregation.getName() << ")" << std::endl;
+        excelGenerator.insertCongregationsForElderGoingOut(worksheet, congregation.getId());
         std::cout << "inserting instruction messages..." << std::endl;
         excelGenerator.insertInstructionMessage(worksheet);
+        std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
     }
 
     std::cout << "saving workbook..." << std::endl;
