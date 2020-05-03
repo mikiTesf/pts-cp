@@ -1,5 +1,7 @@
 #include "excel_generator.h"
 #include "elder.h"
+#include "program.h"
+#include "database.h"
 
 #include <xlsxwriter.h>
 #include <ctime>
@@ -65,13 +67,21 @@ void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<
     this->lastRow = row;
 }
 
-void ExcelGenerator::insertSpeakerDetails(lxw_worksheet* sheet) {
+void ExcelGenerator::insertSpeakersDetails(lxw_worksheet* sheet, std::vector<Program> programsForCongregation) {
+    int row = 2, col = 2;
 
-}
+    for (Program program : programsForCongregation) {
+        if (!program.getFree()) {
+            pts::Elder elder = pts::PTSDatabase::getStorage().get<Elder>(program.getElderId());
+            pts::Talk talk = pts::PTSDatabase::getStorage().get<Talk>(elder.getTalkId());
+            std::string elderFullName = elder.getFirstName() + " " + elder.getMiddleName();
 
-void ExcelGenerator::insertTalkRow(lxw_worksheet* sheet) {
-    // Set this->lastRow to help the `insertInstructionMessage(...)` function indetermining where to
-    // put the message. Doing this is neccessary as the span of the schedule is not always the same
+            worksheet_write_string(sheet, row, col    , elderFullName.c_str(), NULL);
+            worksheet_write_number(sheet, row, col + 1, talk.getTalkNumber(), NULL);
+            worksheet_write_string(sheet, row, col + 2, elder.getPhoneNumber().c_str(), NULL);
+        }
+        ++row;
+    }
 }
 
 void ExcelGenerator::insertInstructionMessage(lxw_worksheet* sheet) {

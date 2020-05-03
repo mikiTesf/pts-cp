@@ -15,6 +15,9 @@ namespace pts {
 
 using std::string;
 using sqlite_orm::distinct;
+using sqlite_orm::where;
+using sqlite_orm::c;
+using sqlite_orm::order_by;
 
 static auto initDB(string path) {
 
@@ -95,7 +98,12 @@ public: static auto getAllPrograms() {
     }
 
 public: static auto getDistinctProgramDates() {
-        return storage.select(distinct(&Program::getDate));
+        return storage.select(distinct(&Program::getDate), order_by(&Program::getDate));
+    }
+
+public: static auto getTalksForCongregation(int congregationId) {
+        return storage.get_all<Program>(where(c(&Program::getCongregationId) = congregationId),
+                                        order_by(&Program::getDate));
     }
 };
 

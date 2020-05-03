@@ -2,6 +2,7 @@
 #define EXCEL_GENERATOR_H
 
 #include "elder.h"
+#include "program.h"
 
 #include <xlsxwriter.h>
 #include <string>
@@ -25,9 +26,7 @@ public:
 
     void insertWeekNumberAndDates(lxw_worksheet*, std::vector<std::string>);
 
-    void insertSpeakerDetails(lxw_worksheet*);
-
-    void insertTalkRow(lxw_worksheet*);
+    void insertSpeakersDetails(lxw_worksheet*, std::vector<pts::Program>);
 
     void insertInstructionMessage(lxw_worksheet*);
 };
