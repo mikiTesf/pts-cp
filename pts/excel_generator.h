@@ -25,6 +25,10 @@ private:
     // in a pts::Program object, and paired with the map above (`elderColumnMap`), the task of finding the
     // cell at which the congregation that an elder will be going to is placed becomes easy.
     std::map<std::string, int> dateRowMap;
+    // common styling formats
+    lxw_format* bold10Centered;
+    lxw_format* regular10left;
+    lxw_format* regular10center;
 public:
     ExcelGenerator();
 
