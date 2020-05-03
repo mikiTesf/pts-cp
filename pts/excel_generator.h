@@ -32,7 +32,7 @@ public:
 
     void insertCongregationName(lxw_worksheet*, std::string);
 
-    void insertColumnsAndElderNames(lxw_worksheet*, std::vector<pts::Elder>);
+    void insertColumnsAndElderNames(lxw_worksheet*, int);
 
     void insertWeekNumberAndDates(lxw_worksheet*, std::vector<std::string>);
 

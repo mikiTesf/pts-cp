@@ -6,6 +6,7 @@
 
 #include <xlsxwriter.h>
 #include <ctime>
+#include <regex>
 
 namespace pts {
 
@@ -30,7 +31,7 @@ void ExcelGenerator::insertCongregationName(lxw_worksheet* sheet, std::string co
     worksheet_merge_range(sheet, 0, 0, 0, 4, congName.c_str(), bold);
 }
 
-void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vector<pts::Elder> elders) {
+void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, int congregationId) {
     int row = 1, col = 0;
     lxw_format* bold = workbook_add_format(this->workbook);
     format_set_bold(bold);
@@ -41,10 +42,14 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
     worksheet_write_string(sheet, row, col++, "የንግግር ቁ.", bold);
     worksheet_write_string(sheet, row, col++, "የሞባይል ስ.ቁ.", bold);
 
+    std::vector<Elder> elders = pts::PTSDatabase::getAllEnabledEldersOfCongregation(congregationId);
     std::string fullName;
+    int talkNumber;
 
     for (pts::Elder elder : elders) {
-        fullName = elder.getFirstName() + " " + elder.getMiddleName();
+        talkNumber = pts::PTSDatabase::getStorage().get<Talk>(elder.getTalkId()).getTalkNumber();
+        fullName = elder.getFirstName() + " " + elder.getMiddleName() +
+                "\n(ንግግር ቁ. " + std::to_string(talkNumber) + ")";
         worksheet_write_string(sheet, row, col, fullName.c_str(), bold);
         this->elderColumnMap[elder.getId()] = col;
         ++col;
@@ -55,18 +60,19 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, std::vecto
 
 void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<std::string> dates) {
     int row = FIRST_SCHEDULE_ROW, weekNumber = 1;
+    std::regex pattern(" [0-9:\\.]+");
     tm tm1;
+
     sscanf(dates[0].c_str(),"%4d-%2d-%2d", &tm1.tm_year, &tm1.tm_mon, &tm1.tm_mday);
     int previousDateMonth = tm1.tm_mon;
 
     for (std::string date : dates) {
         sscanf(date.c_str(),"%4d-%2d-%2d", &tm1.tm_year, &tm1.tm_mon, &tm1.tm_mday);
 
-        if (tm1.tm_mon != previousDateMonth) {
-            weekNumber = 1;
-        }
+        if (tm1.tm_mon != previousDateMonth) { weekNumber = 1; }
 
         worksheet_write_number(sheet, row, 0, weekNumber, NULL);
+        date = std::regex_replace(date, pattern, "");
         worksheet_write_string(sheet, row, 1, date.c_str(), NULL);
 
         previousDateMonth = tm1.tm_mon;
