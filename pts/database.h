@@ -23,6 +23,13 @@ static auto initDB(string path) {
 
         using namespace sqlite_orm;
         return make_storage(path,
+                            make_table("congregation",
+                                       make_column("id", &Congregation::setId, &Congregation::getId, primary_key(), autoincrement()),
+                                       make_column("name", &Congregation::setName, &Congregation::getName)),
+                            make_table("talk",
+                                       make_column("id", &Talk::setId, &Talk::getId, primary_key(), autoincrement()),
+                                       make_column("talk_number", &Talk::setTalkNumber, &Talk::getTalkNumber),
+                                       make_column("title", &Talk::setTalkTitle, &Talk::getTalkTitle)),
                             make_table("elder",
                                        make_column("id", &Elder::setId, &Elder::getId, primary_key(), autoincrement()),
                                        make_column("first_name", &Elder::setFirstName, &Elder::getFirstName),
@@ -31,20 +38,17 @@ static auto initDB(string path) {
                                        make_column("phone_number", &Elder::setPhoneNumber, &Elder::getPhoneNumber),
                                        make_column("talk_id", &Elder::setTalkId, &Elder::getTalkId),
                                        make_column("congregation_id", &Elder::setCongregationId, &Elder::getCongregationId),
-                                       make_column("enabled", &Elder::setEnabled, &Elder::getEnabled)),
-                            make_table("congregation",
-                                       make_column("id", &Congregation::setId, &Congregation::getId, primary_key(), autoincrement()),
-                                       make_column("name", &Congregation::setName, &Congregation::getName)),
-                            make_table("talk",
-                                       make_column("id", &Talk::setId, &Talk::getId, primary_key(), autoincrement()),
-                                       make_column("talk_number", &Talk::setTalkNumber, &Talk::getTalkNumber),
-                                       make_column("title", &Talk::setTalkTitle, &Talk::getTalkTitle)),
+                                       make_column("enabled", &Elder::setEnabled, &Elder::getEnabled),
+                                       foreign_key(&Elder::getCongregationId).references(&Congregation::getId).on_delete.cascade().on_update.cascade(),
+                                       foreign_key(&Elder::getTalkId).references(&Talk::getId).on_update.cascade()),
                             make_table("program",
                                        make_column("id", &Program::setId, &Program::getId, primary_key(), autoincrement()),
                                        make_column("date", &Program::setDate, &Program::getDate),
                                        make_column("congregation_id", &Program::setCongregationId, &Program::getCongregationId),
                                        make_column("elder_id", &Program::setElderId, &Program::getElderId),
-                                       make_column("is_free", &Program::setFree, &Program::getFree))
+                                       make_column("is_free", &Program::setFree, &Program::getFree),
+                                       foreign_key(&Program::getCongregationId).references(&Congregation::getId).on_delete.cascade().on_update.cascade(),
+                                       foreign_key(&Program::getElderId).references(&Elder::getId).on_delete.cascade().on_update.cascade())
         );
     }
 
