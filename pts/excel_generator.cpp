@@ -12,7 +12,7 @@ namespace pts {
 
 ExcelGenerator::ExcelGenerator() {
     this->workbook = workbook_new("PTS.xlsx");
-    this->lastRow = 0;
+    this->lastRow = this->FIRST_ROW;
 
     int row = FIRST_SCHEDULE_ROW;
     for (std::string date : pts::PTSDatabase::getDistinctProgramDates()) {
@@ -41,18 +41,25 @@ lxw_workbook* ExcelGenerator::getWorkbook() {
     return this->workbook;
 }
 
-void ExcelGenerator::insertCongregationName(lxw_worksheet* sheet, std::string congName) {
-    worksheet_merge_range(sheet, 0, 0, 0, 4, congName.c_str(), this->bold10Centered);
+void ExcelGenerator::insertCongregationNameAndDefaultColumns(lxw_worksheet* sheet, std::string congName) {
+    worksheet_merge_range(
+                sheet,
+                this->FIRST_ROW,
+                this->WEEK_NUMBER_COLUMN,
+                this->FIRST_ROW,
+                this->WEEK_NUMBER_COLUMN + 4,
+                congName.c_str(),
+                this->bold10Centered
+    );
+    worksheet_write_string(sheet, this->SECOND_ROW, this->WEEK_NUMBER_COLUMN, "ሳምንት", this->bold10Centered);
+    worksheet_write_string(sheet, this->SECOND_ROW, this->DATE_COLUMN, "ቀን", this->bold10Centered);
+    worksheet_write_string(sheet, this->SECOND_ROW, this->SPEAKER_COLUMN, "ተናጋሪ", this->bold10Centered);
+    worksheet_write_string(sheet, this->SECOND_ROW, this->TALK_NUMBER_COLUMN, "የንግግር ቁ.", this->bold10Centered);
+    worksheet_write_string(sheet, this->SECOND_ROW, this->PHONE_NUMBER_COLUMN, "የሞባይል ስ.ቁ.", this->bold10Centered);
 }
 
-void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, int congregationId) {
-    int row = 1, col = 0;
-
-    worksheet_write_string(sheet, row, col++, "ሳምንት", this->bold10Centered);
-    worksheet_write_string(sheet, row, col++, "ቀን", this->bold10Centered);
-    worksheet_write_string(sheet, row, col++, "ተናጋሪ", this->bold10Centered);
-    worksheet_write_string(sheet, row, col++, "የንግግር ቁ.", this->bold10Centered);
-    worksheet_write_string(sheet, row, col++, "የሞባይል ስ.ቁ.", this->bold10Centered);
+void ExcelGenerator::insertNamesOfEldersGoingOut(lxw_worksheet* sheet, int congregationId) {
+    int col = this->PHONE_NUMBER_COLUMN + 1;
 
     std::vector<Elder> elders = pts::PTSDatabase::getAllEnabledEldersOfCongregation(congregationId);
     std::string fullName;
@@ -62,7 +69,7 @@ void ExcelGenerator::insertColumnsAndElderNames(lxw_worksheet* sheet, int congre
         talkNumber = pts::PTSDatabase::getStorage().get<Talk>(elder.getTalkId()).getTalkNumber();
         fullName = elder.getFirstName() + " " + elder.getMiddleName() +
                 "\n(ንግግር ቁ. " + std::to_string(talkNumber) + ")";
-        worksheet_write_string(sheet, row, col, fullName.c_str(), bold10Centered);
+        worksheet_write_string(sheet, this->SECOND_ROW, col, fullName.c_str(), bold10Centered);
         this->elderColumnMap[elder.getId()] = col;
         ++col;
     }
@@ -95,7 +102,7 @@ void ExcelGenerator::insertWeekNumberAndDates(lxw_worksheet* sheet, std::vector<
 }
 
 void ExcelGenerator::insertSpeakersDetails(lxw_worksheet* sheet, std::vector<Program> programsForCongregation) {
-    int row = FIRST_SCHEDULE_ROW, col = 2;
+    int row = this->FIRST_SCHEDULE_ROW, col = this->SPEAKER_COLUMN;
 
     for (Program program : programsForCongregation) {
         if (!program.getFree()) {

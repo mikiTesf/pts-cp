@@ -17,6 +17,7 @@ private:
     lxw_workbook *workbook;
     const int FIRST_SCHEDULE_ROW = 2;
     int lastRow;
+    int lastCol;
     // The map below (`elderColumnMap`) is used to identify on which column the elder of a
     // congregation is so that, later, when the congregation to which the elder is going to
     // go to are placedit will be easier to know where to put them.
@@ -29,14 +30,22 @@ private:
     lxw_format* bold10Centered;
     lxw_format* regular10left;
     lxw_format* regular10center;
+    // common row and column indices
+    const int FIRST_ROW = 0;
+    const int SECOND_ROW = 1;
+    const int WEEK_NUMBER_COLUMN = 0;
+    const int DATE_COLUMN = 1;
+    const int SPEAKER_COLUMN = 2;
+    const int TALK_NUMBER_COLUMN = 3;
+    const int PHONE_NUMBER_COLUMN = 4;
 public:
     ExcelGenerator();
 
     lxw_workbook* getWorkbook();
 
-    void insertCongregationName(lxw_worksheet*, std::string);
+    void insertCongregationNameAndDefaultColumns(lxw_worksheet*, std::string);
 
-    void insertColumnsAndElderNames(lxw_worksheet*, int);
+    void insertNamesOfEldersGoingOut(lxw_worksheet*, int);
 
     void insertWeekNumberAndDates(lxw_worksheet*, std::vector<std::string>);
 
