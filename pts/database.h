@@ -127,7 +127,7 @@ public: static auto getTalksForCongregation(int congregationId) {
     }
 
 public: static auto getTalksByElder(int elderId) {
-        return storage.get_all<Program>(where(c(&Program::getElderId) = elderId));
+        return storage.get_all<Program>(where(c(&Program::getElderId) = elderId), order_by(&Program::getDate));
     }
 };
 

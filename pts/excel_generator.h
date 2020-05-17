@@ -16,8 +16,10 @@ class ExcelGenerator
 private:
     lxw_workbook *workbook;
     const int FIRST_SCHEDULE_ROW = 2;
-    int lastRow;
+    const int lastRow;
     int lastCol;
+    std::vector<std::string> allProgramDates;
+    std::vector<int> newWeekRows;
     // The map below (`elderColumnMap`) is used to identify on which column the elder of a
     // congregation is so that, later, when the congregation to which the elder is going to
     // go to are placedit will be easier to know where to put them.
@@ -28,15 +30,34 @@ private:
     std::map<std::string, int> dateRowMap;
     // Most styling formats used in the Excel genrator. The naming of the styles follows the following format:
     // fontweight_fontsize_alignment_backgroundcolor_right|left|bottom-border-thickness
-    lxw_format* B_10_C_G_NTN;
-    lxw_format* B_10_C_G_TNN;
-    lxw_format* B_10_C_G_NTM;
-    lxw_format* B_10_C_G_TNM;
-    lxw_format* B_10_C_G_NNM;
-    lxw_format* R_10_C_G_NTM;
-    lxw_format* R_10_L_G_NNM;
-    lxw_format* R_10_C_G_NNM;
-    lxw_format* R_10_C_G_TNM;
+    lxw_format
+    *B_10_C_G_NTN, *B_10_C_G_TNN, *B_10_C_G_NTM, *B_10_C_G_TNM, *B_10_C_G_NNM,
+    *R_10_C_G_NTM, *R_10_C_K_NTN, *R_10_L_G_NNM, *R_10_L_K_NTN, *R_10_L_K_NNN,
+    *R_10_C_G_NNM, *R_10_C_G_TNM, *R_10_C_K_NNN, *R_10_C_K_TNN, *R_10_C_K_TNT,
+    *R_10_C_K_NNT, *R_10_C_G_NTT, *R_10_C_G_TNT, *R_10_L_G_NNT, *R_10_C_G_NNT,
+    *R_10_C_K_NTT, *R_10_L_K_NNT;
+
+    /*
+
+    The following table describes what the letters and numbers in the `lxw_format*` variables above mean.
+
+    +--------------------------+----------+-----------------------+
+    | criteria*                | values   | meaning               |
+    +--------------------------+----------+-----------------------+
+    | font weight              | B, R     | Bold or Regular       |
+    | font size                | [1-9]+   | Any non-zero digit    |
+    | alignmemnt               | C, L     | Center or Left        |
+    | background color         | G, K     | Grey or blanK         |
+    | border thickness - right | N, T, M  | thiN, Thick or Medium |
+    | border thickness - left  | N, T, M  | thiN, Thick or Medium |
+    | border thickness - top   | N, T, M  | thiN, Thick or Medium |
+    +--------------------------+----------+-----------------------+
+    * The criteria are listed in order of their appearance in the names of the formats
+
+    */
+
+    // other non-standard formats
+    lxw_format *instructionMessageTitleFormat, *instructionMessageFormat;
     // Common row and column indices
     const int FIRST_ROW = 0;
     const int SECOND_ROW = 1;
@@ -45,15 +66,12 @@ private:
     const int SPEAKER_COLUMN = 2;
     const int TALK_NUMBER_COLUMN = 3;
     const int PHONE_NUMBER_COLUMN = 4;
-public:
-    ExcelGenerator();
-
-    lxw_workbook* getWorkbook();
+    // Functions
+    void insertCongregationsForEldersGoingOut(lxw_worksheet*);
     void insertCongregationNameAndDefaultColumns(lxw_worksheet*, std::string);
-    void insertNamesOfEldersGoingOut(lxw_worksheet*, int);
+    void insertElderNamesAndCongregationsTheyGoTo(lxw_worksheet*, int);
     void insertWeekNumberAndDates(lxw_worksheet*, std::vector<std::string>);
     void insertSpeakersDetails(lxw_worksheet*, std::vector<pts::Program>);
-    void insertCongregationsForElderGoingOut(lxw_worksheet*, int);
     void insertInstructionMessage(lxw_worksheet*);
     lxw_format* getCellStyle(
             bool boldFont,
@@ -62,8 +80,15 @@ public:
             bool hasGrayBackground,
             lxw_format_borders rightBorderThickness,
             lxw_format_borders leftBorderThickness,
-            lxw_format_borders bottomBorderThickness
-    );
+            lxw_format_borders bottomBorderThickness);
+    std::string getCongregationNameForTalkAtDate(std::string date, std::vector<pts::Program> talksByElder);
+    lxw_format* getCellStyle(int row, int col);
+    bool isANewWeekRow(int row);
+public:
+    ExcelGenerator();
+    lxw_workbook* getWorkbook();
+    // pulls all data direcly from the database
+    void generateExcelDocument();
 };
 
 } // end of namespace
