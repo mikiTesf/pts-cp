@@ -16,7 +16,7 @@ class ExcelGenerator
 private:
     lxw_workbook *workbook;
     const int FIRST_SCHEDULE_ROW = 2;
-    const int lastRow;
+    int lastRow;
     int lastCol;
     std::vector<std::string> allProgramDates;
     std::vector<int> newWeekRows;
@@ -28,8 +28,7 @@ private:
     // in a pts::Program object, and paired with the map above (`elderColumnMap`), the task of finding the
     // cell at which the congregation that an elder will be going to is placed becomes easy.
     std::map<std::string, int> dateRowMap;
-    // Most styling formats used in the Excel genrator. The naming of the styles follows the following format:
-    // fontweight_fontsize_alignment_backgroundcolor_right|left|bottom-border-thickness
+    // see the table below the following declaration to understand the naming scheme used
     lxw_format
     *B_10_C_G_NTN, *B_10_C_G_TNN, *B_10_C_G_NTM, *B_10_C_G_TNM, *B_10_C_G_NNM,
     *R_10_C_G_NTM, *R_10_C_K_NTN, *R_10_L_G_NNM, *R_10_L_K_NTN, *R_10_L_K_NNN,
@@ -39,19 +38,19 @@ private:
 
     /*
 
-    The following table describes what the letters and numbers in the `lxw_format*` variables above mean.
+    The following table describes what the letters and numbers in the `lxw_format*` variable names above mean.
 
-    +--------------------------+----------+-----------------------+
-    | criteria*                | values   | meaning               |
-    +--------------------------+----------+-----------------------+
-    | font weight              | B, R     | Bold or Regular       |
-    | font size                | [1-9]+   | Any non-zero digit    |
-    | alignmemnt               | C, L     | Center or Left        |
-    | background color         | G, K     | Grey or blanK         |
-    | border thickness - right | N, T, M  | thiN, Thick or Medium |
-    | border thickness - left  | N, T, M  | thiN, Thick or Medium |
-    | border thickness - top   | N, T, M  | thiN, Thick or Medium |
-    +--------------------------+----------+-----------------------+
+    +---------------------------+----------+-----------------------+
+    | criteria*                 | values   | meaning               |
+    +---------------------------+----------+-----------------------+
+    | font weight               | B, R     | Bold or Regular       |
+    | font size                 | [1-9]+   | Any non-zero digit    |
+    | alignmemnt                | C, L     | Center or Left        |
+    | background color          | G, K     | Grey or blanK         |
+    | border thickness - right  | N, T, M  | thiN, Thick or Medium |
+    | border thickness - left   | N, T, M  | thiN, Thick or Medium |
+    | border thickness - bottom | N, T, M  | thiN, Thick or Medium |
+    +---------------------------+----------+-----------------------+
     * The criteria are listed in order of their appearance in the names of the formats
 
     */
