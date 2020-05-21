@@ -31,7 +31,6 @@ SOURCES += \
         mainwindow.cpp \
         program.cpp \
         excel_generator.cpp \
-        sqlite/sqlite3.c \
         talk.cpp
 
 HEADERS += \
@@ -42,7 +41,6 @@ HEADERS += \
         mainwindow.h \
         program.h \
         excel_generator.h \
-        sqlite/sqlite3.h \
         sqlite_orm/sqlite_orm.h \
         talk.h
 
