@@ -22,13 +22,12 @@ int main(int argc, char *argv[])
 //    MainWindow w;
 //    w.show();
 //    return a.exec();
-//    //return 0;
+//    return 0;
 
     pts::ExcelGenerator excelGenerator;
-    lxw_workbook* workbook = excelGenerator.getWorkbook();
     excelGenerator.generateExcelDocument();
-    std::cout << "saving workbook..." << std::endl;
-    workbook_close(workbook);
+
+    std::cout << "done..." << std::endl;
 
     return 0;
 }

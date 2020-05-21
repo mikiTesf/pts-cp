@@ -4,6 +4,7 @@
 #include "program.h"
 #include "database.h"
 
+#include <iostream>
 #include <xlsxwriter.h>
 #include <ctime>
 #include <regex>
@@ -299,17 +300,23 @@ bool ExcelGenerator::isANewWeekRow(int row) {
 }
 
 void ExcelGenerator::generateExcelDocument() {
-    for (auto congregation : pts::PTSDatabase::getAllCongregations()) {
-        lxw_worksheet* worksheet = workbook_add_worksheet(workbook, congregation.getName().c_str());
 
-        std::vector<Elder> elders = pts::PTSDatabase::getStorage()
-                .get_all<Elder>(where(c(&Elder::getCongregationId) = congregation.getId()));
+    if (pts::PTSDatabase::getStorage().count<pts::Program>() != 0) {
 
-        this->insertCongregationNameAndDefaultColumns(worksheet, congregation.getName().c_str());
-        this->insertWeekNumberAndDates(worksheet, pts::PTSDatabase::getDistinctProgramDates());
-        this->insertElderNamesAndCongregationsTheyGoTo(worksheet, congregation.getId());
-        this->insertSpeakersDetails(worksheet, pts::PTSDatabase::getTalksForCongregation(congregation.getId()));
-        this->insertInstructionMessage(worksheet);
+        for (pts::Congregation congregation : pts::PTSDatabase::getAllCongregations()) {
+            lxw_worksheet* worksheet = workbook_add_worksheet(this->workbook, congregation.getName().c_str());
+
+            std::vector<Elder> elders = pts::PTSDatabase::getStorage()
+                    .get_all<Elder>(where(c(&Elder::getCongregationId) = congregation.getId()));
+
+            this->insertCongregationNameAndDefaultColumns(worksheet, congregation.getName().c_str());
+            this->insertWeekNumberAndDates(worksheet, pts::PTSDatabase::getDistinctProgramDates());
+            this->insertElderNamesAndCongregationsTheyGoTo(worksheet, congregation.getId());
+            this->insertSpeakersDetails(worksheet, pts::PTSDatabase::getTalksForCongregation(congregation.getId()));
+            this->insertInstructionMessage(worksheet);
+        }
+
+        workbook_close(this->workbook);
     }
 }
 
