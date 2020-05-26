@@ -31,23 +31,33 @@ SOURCES += \
         mainwindow.cpp \
         program.cpp \
         excel_generator.cpp \
-        talk.cpp
+        talk.cpp \
+        update_congregation_dialog.cpp \
+        update_elder_dialog.cpp \
+        update_talk_dialog.cpp
 
 HEADERS += \
         congregation.h \
         constants.h \
         database.h \
         elder.h \
+        form_validation.h \
         mainwindow.h \
         program.h \
         excel_generator.h \
         sqlite_orm/sqlite_orm.h \
-        talk.h
+        talk.h \
+        update_congregation_dialog.h \
+        update_elder_dialog.h \
+        update_talk_dialog.h
 
 LIBS += -ldl -lsqlite3 -lxlsxwriter
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        update_congregation_dialog.ui \
+        update_elder_dialog.ui \
+        update_talk_dialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

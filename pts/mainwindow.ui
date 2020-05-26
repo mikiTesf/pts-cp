@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>497</height>
+    <width>708</width>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="congregationTab">
        <attribute name="title">
@@ -108,7 +108,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="updataeCongregationButton">
+           <widget class="QPushButton" name="updateCongregationButton">
             <property name="text">
              <string>Update</string>
             </property>
@@ -269,6 +269,9 @@
        <layout class="QVBoxLayout" name="verticalLayout_8">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetNoConstraint</enum>
+          </property>
           <property name="rightMargin">
            <number>0</number>
           </property>
@@ -276,6 +279,9 @@
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
              <layout class="QFormLayout" name="formLayout_4">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
               <property name="bottomMargin">
                <number>0</number>
               </property>
@@ -290,7 +296,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEdit"/>
+               <widget class="QLineEdit" name="firstNameLineEdit"/>
               </item>
               <item row="1" column="0" colspan="2">
                <layout class="QFormLayout" name="formLayout_5">
@@ -305,14 +311,14 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_2"/>
+                 <widget class="QLineEdit" name="middleNameLineEdit"/>
                 </item>
                </layout>
               </item>
               <item row="2" column="0" colspan="2">
                <layout class="QFormLayout" name="formLayout_6">
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_3"/>
+                 <widget class="QLineEdit" name="lastNameLineEdit"/>
                 </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="lastNameLabel">
@@ -334,8 +340,18 @@
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
              <layout class="QFormLayout" name="formLayout_8">
+              <property name="fieldGrowthPolicy">
+               <enum>QFormLayout::ExpandingFieldsGrow</enum>
+              </property>
               <item row="0" column="1">
-               <widget class="QComboBox" name="congregationsComboBox"/>
+               <widget class="QComboBox" name="congregationsComboBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="congregationLabel">
@@ -360,7 +376,14 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QComboBox" name="talksComboBox"/>
+                 <widget class="QComboBox" name="talksComboBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -377,7 +400,7 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="lineEdit_4">
+                 <widget class="QLineEdit" name="phoneNumberLineEdit">
                   <property name="cursor">
                    <cursorShape>IBeamCursor</cursorShape>
                   </property>
@@ -446,7 +469,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="updateTalkButton_2">
+           <widget class="QPushButton" name="updateElderButton">
             <property name="text">
              <string>Update</string>
             </property>
@@ -548,7 +571,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>708</width>
      <height>20</height>
     </rect>
    </property>

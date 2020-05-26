@@ -14,6 +14,13 @@
 namespace pts {
 
 using std::string;
+
+using sqlite_orm::make_storage;
+using sqlite_orm::make_table;
+using sqlite_orm::make_column;
+using sqlite_orm::primary_key;
+using sqlite_orm::autoincrement;
+using sqlite_orm::foreign_key;
 using sqlite_orm::distinct;
 using sqlite_orm::where;
 using sqlite_orm::c;
@@ -21,7 +28,6 @@ using sqlite_orm::order_by;
 
 static auto initDB(string path) {
 
-        using namespace sqlite_orm;
         return make_storage(path,
                             make_table("congregation",
                                        make_column("id", &Congregation::setId, &Congregation::getId, primary_key(), autoincrement()),
@@ -53,7 +59,7 @@ static auto initDB(string path) {
     }
 
 using Storage = decltype(initDB(""));
-static Storage storage = initDB(constants::DB_NAME);
+static Storage storage = initDB(pts::constants::DB_NAME);
 
 class PTSDatabase {
 
@@ -107,6 +113,10 @@ public: static auto getAllCongregations() {
         return storage.get_all<Congregation>();
     }
 
+public: static std::vector<pts::Congregation> getCongregationByName(std::string congregationName) {
+        return storage.get_all<pts::Congregation>(where(c(&Congregation::getName) = congregationName));
+    }
+
 public: static auto getAllTalks() {
 
         return storage.get_all<Talk>();
@@ -128,6 +138,26 @@ public: static auto getTalksForCongregation(int congregationId) {
 
 public: static auto getTalksByElder(int elderId) {
         return storage.get_all<Program>(where(c(&Program::getElderId) = elderId), order_by(&Program::getDate));
+    }
+
+public: static std::vector<pts::Talk> getTalkByTalkNumber(int talkNumber) {
+        return storage.get_all<pts::Talk>(where(c(&Talk::getTalkNumber) = talkNumber));
+    }
+
+public: static void removeTalkByTalkNumber(int talkNumber) {
+        storage.remove_all<pts::Talk>(where(c(&Talk::getTalkNumber) = talkNumber));
+    }
+
+public: static std::vector<pts::Elder> getEldersByTalkNumber(int talkId) {
+        return storage.get_all<pts::Elder>(where(c(&Elder::getTalkId) = talkId));
+    }
+
+public: static void removeElderByPhoneNumber(std::string phoneNumber) {
+        storage.remove_all<pts::Elder>(where(c(&Elder::getPhoneNumber) = phoneNumber));
+    }
+
+public: static pts::Elder getElderByPhoneNumber(std::string phoneNumber) {
+        return storage.get_all<pts::Elder>(where(c(&Elder::getPhoneNumber) = phoneNumber)).at(0);
     }
 };
 

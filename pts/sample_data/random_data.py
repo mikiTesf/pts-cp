@@ -51,7 +51,7 @@ for i in range(1, TOTAL_CONGREGATIONS):
 
 print('cong_csv successfuly created...')
 ############## ID and elder_detail csv #############
-#id firstName    middleName    lastName    phoneNumber    talk_id    congregation_id
+#id firstName    middleName    lastName    phoneNumber    talk_id    congregation_id enabled
 word_file = open('text/names.txt')
 csv_file  = open('random_elders.csv', 'w')
 
